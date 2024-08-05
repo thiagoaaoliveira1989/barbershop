@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String  @id @default(uuid())
+  email    String  @unique
+  name     String?
+  password String
+
+  actived      Boolean  @default(true)
+  dateInactive DateTime @updatedAt
+
+  createAt  DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  bookings  Booking[]
+}
+
+model Barbershop {
+  id          String   @id @default(uuid())
+  name        String
+  address     String
+  phones      String[]
+  description String
+  imageUrl    String
+
+  actived      Boolean  @default(true)
+  dateInactive DateTime
+
+  createAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  barbershopServices BarbershopService[]
+}
+
+model BarbershopService {
+  id           String     @id @default(uuid())
+  name         String
+  description  String
+  imageUrl     String
+  price        Decimal    @db.Decimal(10, 2)
+  barbershopId String
+  barbershop   Barbershop @relation(fields: [barbershopId], references: [id])
+
+  createAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  bookings           Booking[]
+
+}
+
+model Booking {
+  id String @id @default(uuid())
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  barbershopServiceId String
+  barbershopServices   BarbershopService @relation(fields: [barbershopServiceId], references: [id])
+
+  dateBooking       DateTime
+  cancelBooking     Boolean  @default(false)
+  dateCancelBooking DateTime
+
+  createAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
