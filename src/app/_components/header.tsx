@@ -15,7 +15,11 @@ export const Header = () => {
           height={18}
           width={120}
         />
-        <Button size="icon" variant="outline" className="ml-4">
+        <Button
+          size="icon"
+          variant="outline"
+          className="ml-4 text-white border-none hover:text-slate-400"
+        >
           <MenuIcon />
         </Button>
       </CardContent>
