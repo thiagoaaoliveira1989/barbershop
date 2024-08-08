@@ -1,8 +1,15 @@
 import Footer from "@/app/_components/footer";
+import PhoneItem from "@/app/_components/phone-item";
 import ServiceItem from "@/app/_components/services-item";
 import { Button } from "@/app/_components/ui/button";
 import db from "@/app/_lib/prisma";
-import { ChevronLeftIcon, MapPinIcon, MenuIcon, StarIcon } from "lucide-react";
+import {
+  ChevronLeftIcon,
+  MapPinIcon,
+  MenuIcon,
+  SmartphoneIcon,
+  StarIcon,
+} from "lucide-react";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
@@ -28,8 +35,11 @@ const BarbershopPage = async ({ params }: props) => {
     return notFound();
   }
 
+  const handleCopyPhoneClick = () => {};
+
   return (
     <>
+      {/* IMAGEM */}
       <div className="relative w-full h-[250px]">
         <Image
           src={barbershop?.imageUrl as string | StaticImport}
@@ -57,6 +67,7 @@ const BarbershopPage = async ({ params }: props) => {
         </Button>
       </div>
 
+      {/* TITULO */}
       <div className=" p-5 bg-[#141518] border-b border-solid">
         <h1 className="mb-6 text-xl font-bold">{barbershop?.name}</h1>
         <div className="mb-2 flex items-center gap-1">
@@ -75,7 +86,8 @@ const BarbershopPage = async ({ params }: props) => {
         <p className="text-justify text-sm">{barbershop.description}</p>
       </div>
 
-      <div className="p-5 space-y-3 bg-[#141518]">
+      {/* SERVIÇOS */}
+      <div className="p-5 space-y-3 border-b border-solid bg-[#141518]">
         <h2 className="text-xs font-bold uppercase  text-gray-400">Serviços</h2>
         <div className="space-y-3">
           {barbershop.services.map((service) => (
@@ -84,7 +96,13 @@ const BarbershopPage = async ({ params }: props) => {
         </div>
       </div>
 
-      <Footer />
+      {/* CONTATO */}
+      <div className="p-5 space-y-3 border-b border-solid bg-[#141518]">
+        <h2 className="text-xs font-bold uppercase  text-gray-400">Contatos</h2>
+        {barbershop.phones.map((phone) => (
+          <PhoneItem key={phone} phone={phone} />
+        ))}
+      </div>
     </>
   );
 };
