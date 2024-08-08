@@ -4,16 +4,15 @@ import { Input } from "./_components/ui/input";
 import { Button } from "./_components/ui/button";
 import { SearchIcon } from "lucide-react";
 import Banner from "../assets/Banner.png";
-import prisma from "../app/_lib/prisma";
 import { BarbershopItem } from "./_components/barbershop-items";
 import Footer from "./_components/footer";
-import "./globals.css";
 import { quickSearchOption } from "./_constants/search";
 import { Booking } from "./_components/booking";
+import db from "../app/_lib/prisma";
 
 const Home = async () => {
-  const barbershops = await prisma.barbershop.findMany({});
-  const popularBarbershops = await prisma.barbershop.findMany({
+  const barbershops = await db.barbershop.findMany({});
+  const popularBarbershops = await db.barbershop.findMany({
     orderBy: {
       name: "desc",
     },
@@ -21,7 +20,7 @@ const Home = async () => {
 
   // TODO - receber agendamento como prop
   return (
-    <div>
+    <div className="">
       {/*header*/}
       <Header />
 

@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { StarIcon } from "lucide-react";
+import Link from "next/link";
 
 export interface IBarber {
   id: string;
@@ -51,7 +52,7 @@ export const BarbershopItem = ({ barber }: BarbershopItemProps) => {
               variant="secondary"
               className="rounded-xl mt-3 w-full bg-[#353638]"
             >
-              Reservar
+              <Link href={`barbershop/${barber.id}`}>Reservar</Link>
             </Button>
           </div>
         </CardContent>
