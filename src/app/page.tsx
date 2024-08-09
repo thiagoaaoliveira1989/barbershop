@@ -5,10 +5,10 @@ import { Button } from "./_components/ui/button";
 import { SearchIcon } from "lucide-react";
 import Banner from "../assets/Banner.png";
 import { BarbershopItem } from "./_components/barbershop-items";
-import Footer from "./_components/footer";
 import { quickSearchOption } from "./_constants/search";
 import { Booking } from "./_components/booking";
 import db from "../app/_lib/prisma";
+import UserLogin from "./_components/userLogin";
 
 const Home = async () => {
   const barbershops = await db.barbershop.findMany({});
@@ -25,8 +25,7 @@ const Home = async () => {
       <Header />
 
       <div className="p-5 text-white">
-        <h2 className="text-xl font-bold">Olá, Thiago</h2>
-        <p>Segunda-Feira, 05 de Agosto</p>
+        <UserLogin />
 
         {/*BUSCA*/}
         <div className="mt-6 flex items-center justify-between gap-4 ">

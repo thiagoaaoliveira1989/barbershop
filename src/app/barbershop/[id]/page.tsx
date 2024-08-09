@@ -1,17 +1,11 @@
-import Footer from "@/app/_components/footer";
 import PhoneItem from "@/app/_components/phone-item";
 import ServiceItem from "@/app/_components/services-item";
+import SiderbarButton from "@/app/_components/siderbar-button";
 import { Button } from "@/app/_components/ui/button";
 import db from "@/app/_lib/prisma";
-import {
-  ChevronLeftIcon,
-  MapPinIcon,
-  MenuIcon,
-  SmartphoneIcon,
-  StarIcon,
-} from "lucide-react";
+import { ChevronLeftIcon, MapPinIcon, MenuIcon, StarIcon } from "lucide-react";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -35,8 +29,6 @@ const BarbershopPage = async ({ params }: props) => {
     return notFound();
   }
 
-  const handleCopyPhoneClick = () => {};
-
   return (
     <>
       {/* IMAGEM */}
@@ -47,23 +39,23 @@ const BarbershopPage = async ({ params }: props) => {
           alt={barbershop?.name as string}
           className="object-cover"
         />
+
         <Button
           size="icon"
           variant="secondary"
-          className="absolute left-4 top-4 asChild bg-[#141518] rounded-xl"
+          className="absolute left-4 top-4 asChild bg-[#141518] rounded-xl  hover:bg-primary"
         >
           <Link href="/">
             <ChevronLeftIcon />
           </Link>
         </Button>
+
         <Button
           size="icon"
           variant="secondary"
           className="absolute right-4 top-4 asChild bg-[#141518] rounded-xl"
         >
-          <Link href="">
-            <MenuIcon />
-          </Link>
+          <SiderbarButton />
         </Button>
       </div>
 
