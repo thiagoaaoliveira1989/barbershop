@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  :root{
+  .dark {
     --background: #171717;
     --foreground: #d6d6f5;
 
@@ -40,9 +40,11 @@
   * {
     @apply border-border;
   }
+  html {
+    @apply h-full;
+  }
   body {
-
-    @apply bg-background text-foreground;
+    @apply h-full bg-background text-foreground;
   }
 }
 

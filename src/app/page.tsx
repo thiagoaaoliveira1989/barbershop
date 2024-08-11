@@ -1,14 +1,13 @@
 import Image from "next/image";
 import { Header } from "./_components/header";
-import { Input } from "./_components/ui/input";
 import { Button } from "./_components/ui/button";
-import { SearchIcon } from "lucide-react";
 import Banner from "../assets/Banner.png";
 import { BarbershopItem } from "./_components/barbershop-items";
 import { quickSearchOption } from "./_constants/search";
 import { Booking } from "./_components/booking";
 import db from "../app/_lib/prisma";
 import UserLogin from "./_components/userLogin";
+import Search from "./_components/search";
 
 const Home = async () => {
   const barbershops = await db.barbershop.findMany({});
@@ -28,11 +27,8 @@ const Home = async () => {
         <UserLogin />
 
         {/*BUSCA*/}
-        <div className="mt-6 flex items-center justify-between gap-4 ">
-          <Input placeholder="Search" className="rounded-xl bg-[#26272B]" />
-          <Button className="bg-[#8162FF] text-white rounded-xl hover:bg-[#644cc6]">
-            <SearchIcon className="" />
-          </Button>
+        <div className="mt-6">
+          <Search />
         </div>
 
         {/*BUTTONS*/}
