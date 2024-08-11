@@ -8,6 +8,7 @@ import { Booking } from "./_components/booking";
 import db from "../app/_lib/prisma";
 import UserLogin from "./_components/userLogin";
 import Search from "./_components/search";
+import Link from "next/link";
 
 const Home = async () => {
   const barbershops = await db.barbershop.findMany({});
@@ -34,13 +35,12 @@ const Home = async () => {
         {/*BUTTONS*/}
         <div className="flex items-center justify-between mt-6 overflow-y-auto gap-4 [&::-webkit-scrollbar]:hidden">
           {quickSearchOption.map((quick) => (
-            <Button
-              key={quick.title}
-              className="flex gap-2 rounded-xl bg-[#26272B] hover:bg-gray-800"
-            >
-              <Image src={quick.imageUrl} height={20} alt={quick.title} />
-              <p>{quick.title}</p>
-            </Button>
+            <Link key={quick.title} href={`/barbershop?service=${quick.title}`}>
+              <Button className="flex gap-2 rounded-xl bg-[#26272B] hover:bg-gray-800">
+                <Image src={quick.imageUrl} height={20} alt={quick.title} />
+                <p>{quick.title}</p>
+              </Button>
+            </Link>
           ))}
         </div>
 

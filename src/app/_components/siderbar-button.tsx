@@ -2,6 +2,7 @@
 
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -27,6 +28,7 @@ import {
 import Google from "../../assets/Google.svg";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { Avatar, AvatarImage } from "./ui/avatar";
+import Link from "next/link";
 
 const SiderbarButton = ({}) => {
   const { data } = useSession();
@@ -108,32 +110,44 @@ const SiderbarButton = ({}) => {
           </div>
 
           <div className="p-5 flex flex-col gap-4 border-b border-solid">
-            <Button
-              className="justify-start gap-2 hover:bg-primary"
-              variant="ghost"
-            >
-              <HomeIcon size={18} />
-              Início
-            </Button>
+            <Link href="/" className="flex gap-2">
+              <SheetClose asChild>
+                <Button
+                  className="justify-start gap-2 hover:bg-primary w-full"
+                  variant="ghost"
+                >
+                  <HomeIcon size={18} />
+                  Início
+                </Button>
+              </SheetClose>
+            </Link>
+
             <Button
               className="justify-start gap-2  hover:bg-primary"
               variant="ghost"
             >
               <CalendarIcon size={18} />
-              Início
+              Agendamentos
             </Button>
           </div>
 
           <div className="p-5 flex flex-col gap-4 border-b border-solid">
             {quickSearchOption.map((option) => (
-              <Button
+              <SheetClose
                 key={option.title}
-                className="justify-start gap-2  hover:bg-primary"
-                variant="ghost"
+                className="flex flex-row gap-2 w-full"
+                asChild
               >
-                <Image src={option.imageUrl} alt={option.title} />
-                <p>{option.title}</p>
-              </Button>
+                <Link href={`/barbershop?service=${option.title}`}>
+                  <Button
+                    className="justify-start gap-2  hover:bg-primary w-full"
+                    variant="ghost"
+                  >
+                    <Image src={option.imageUrl} alt={option.title} />
+                    <p>{option.title}</p>
+                  </Button>
+                </Link>
+              </SheetClose>
             ))}
           </div>
 
