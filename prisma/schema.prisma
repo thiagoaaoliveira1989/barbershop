@@ -90,7 +90,7 @@ model Booking {
   createdAt DateTime          @default(now())
   date      DateTime
   serviceId String
-  confirmaded Boolean @default(false)
+  confirmed Boolean           @default(false)
   service   BarbershopService @relation(fields: [serviceId], references: [id])
   user      User              @relation(fields: [userId], references: [id])
 }
