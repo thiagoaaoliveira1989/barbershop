@@ -1,6 +1,5 @@
 "use server";
 
-import { toast } from "sonner";
 import db from "../_lib/prisma";
 
 interface Params {

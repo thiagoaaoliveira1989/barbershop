@@ -16,7 +16,7 @@ import {
 import { Calendar } from "./ui/calendar";
 import { ptBR } from "date-fns/locale";
 import { useState } from "react";
-import { format, set, setMinutes } from "date-fns";
+import { format, set } from "date-fns";
 import { createBooking } from "../_actions/create-booking";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
@@ -32,7 +32,7 @@ const ServiceItem = ({ service, barbershop }: props) => {
     undefined,
   );
 
-  const { data, status, update } = useSession();
+  const { data } = useSession();
 
   const handleDateSelected = (date: Date | undefined) => {
     setSelectedDay(date);
@@ -56,7 +56,7 @@ const ServiceItem = ({ service, barbershop }: props) => {
     try {
       await createBooking({
         serviceId: service.id,
-        userId: "clzlzyhi10000t4jkanfw5d4u",
+        userId: data.user.id as string,
         date: newDate,
       });
 
@@ -209,11 +209,14 @@ const ServiceItem = ({ service, barbershop }: props) => {
                     </Card>
                   </div>
                 )}
-                <SheetFooter className="px-6">
-                  <SheetClose asChild>
-                    <Button onClick={handleCreatebooking}>Confirmar</Button>
-                  </SheetClose>
-                </SheetFooter>
+
+                {selectedTime && selectedDay && (
+                  <SheetFooter className="px-6 mb-5">
+                    <SheetClose asChild>
+                      <Button onClick={handleCreatebooking}>Confirmar</Button>
+                    </SheetClose>
+                  </SheetFooter>
+                )}
               </SheetContent>
             </Sheet>
           </div>
