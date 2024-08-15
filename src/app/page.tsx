@@ -4,11 +4,16 @@ import { Button } from "./_components/ui/button";
 import Banner from "../assets/Banner.png";
 import { BarbershopItem } from "./_components/barbershop-items";
 import { quickSearchOption } from "./_constants/search";
-import { Booking } from "./_components/booking";
 import db from "../app/_lib/prisma";
 import UserLogin from "./_components/userLogin";
 import Search from "./_components/search";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { getBookings } from "./_actions/get-bookings";
+import { getServerSession } from "next-auth";
+import { BookingStatus } from "@prisma/client";
+import { authOptions } from "./_lib/auth";
+import BookingItem from "./_components/booking-item";
 
 const Home = async () => {
   const barbershops = await db.barbershop.findMany({});
@@ -18,7 +23,18 @@ const Home = async () => {
     },
   });
 
-  // TODO - receber agendamento como prop
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user.id) {
+    return notFound();
+  }
+  const userId = session.user.id;
+  const bookingList = await getBookings(userId);
+
+  const bookingsConfirmed = bookingList.filter(
+    (booking) => booking.confirmed === BookingStatus.CONFIRMED,
+  );
+
   return (
     <div className="">
       {/*header*/}
@@ -55,7 +71,7 @@ const Home = async () => {
         </div>
 
         {/*AGENDAMENTO*/}
-        <Booking />
+        <BookingItem bookingList={bookingsConfirmed} />
 
         {/*RECOMENDADOS*/}
         <div className="mt-6">

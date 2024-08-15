@@ -15,11 +15,12 @@ import {
 } from "./ui/sheet";
 import { Calendar } from "./ui/calendar";
 import { ptBR } from "date-fns/locale";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format, set } from "date-fns";
 import { createBooking } from "../_actions/create-booking";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
+import { getBookings } from "../_actions/get-bookings";
 
 interface props {
   service: BarbershopService;
@@ -28,9 +29,10 @@ interface props {
 
 const ServiceItem = ({ service, barbershop }: props) => {
   const [selectedDay, setSelectedDay] = useState<Date | undefined>(undefined);
-  const [selectedTime, setSelectedTime] = useState<String | undefined>(
+  const [selectedTime, setSelectedTime] = useState<string | undefined>(
     undefined,
   );
+  const [availableTimes, setAvailableTimes] = useState<string[]>([]);
 
   const { data } = useSession();
 
@@ -67,11 +69,11 @@ const ServiceItem = ({ service, barbershop }: props) => {
     }
   };
 
-  function generateTimeList(
+  const generateTimeList = (
     startTime: number,
     endTime: number,
     intervalMinutes: number,
-  ) {
+  ): string[] => {
     const times = [];
     let currentTime = startTime;
 
@@ -83,23 +85,54 @@ const ServiceItem = ({ service, barbershop }: props) => {
     }
 
     return times;
-  }
+  };
 
-  const startTime = 8 * 60; // 08:00 in minutes
-  const endTime = 17 * 60; // 17:00 in minutes
-  const intervalMinutes = 45;
+  const fetchAvailableTimes = async (selectedDay: Date) => {
+    const listBookings = await getBookings();
 
-  const timeList = generateTimeList(startTime, endTime, intervalMinutes);
+    const reservedTimesByDay = listBookings.map((booking) => {
+      const localDate = new Date(booking.date);
+      localDate.setHours(localDate.getUTCHours() - 3);
+
+      const date = localDate.toISOString().split("T")[0];
+      const time = localDate.toTimeString().split(" ")[0].substring(0, 5);
+
+      return { date, time };
+    });
+
+    const selectedDayString = selectedDay.toISOString().split("T")[0];
+
+    const reservedTimes = reservedTimesByDay
+      .filter((booking) => booking.date === selectedDayString)
+      .map((booking) => booking.time);
+
+    const startTime = 8 * 60; // 08:00 in minutes
+    const endTime = 17 * 60; // 17:00 in minutes
+    const intervalMinutes = 45;
+
+    const timeList = generateTimeList(startTime, endTime, intervalMinutes);
+    const availableTimes = timeList.filter(
+      (time) => !reservedTimes.includes(time),
+    );
+
+    setAvailableTimes(availableTimes);
+  };
+
+  useEffect(() => {
+    if (selectedDay) {
+      fetchAvailableTimes(selectedDay);
+    }
+  }, [selectedDay]);
 
   return (
-    <Card className="">
+    <Card>
       <CardContent className="flex items-center gap-3 p-3">
         <div className="relative min-h-[110px] min-w-[110px] max-w-[110px] max-h-[110px]">
           <Image
-            src={service.imageUrl} // Usando interpolação correta para a URL da imagem
-            alt={service.name} // Usando o nome da barbearia como texto alternativo
+            src={service.imageUrl}
+            alt={service.name}
             fill
-            className=" object-cover rounded-lg"
+            className="object-cover rounded-lg"
           />
         </div>
 
@@ -160,7 +193,7 @@ const ServiceItem = ({ service, barbershop }: props) => {
 
                 {selectedDay && (
                   <div className="flex p-5 border-b border-solid overflow-x-auto [&::-webkit-scrollbar]:hidden gap-3">
-                    {timeList.map((time) => (
+                    {availableTimes.map((time) => (
                       <Button
                         key={time}
                         variant={selectedTime === time ? "default" : "outline"}
@@ -175,7 +208,7 @@ const ServiceItem = ({ service, barbershop }: props) => {
 
                 {selectedTime && selectedDay && (
                   <div className="p-5">
-                    <Card className="">
+                    <Card>
                       <CardContent className="p-3 space-y-3">
                         <div className="flex justify-between items-center">
                           <h2 className="font-bold">{service.name}</h2>
