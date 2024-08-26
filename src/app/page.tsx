@@ -25,10 +25,7 @@ const Home = async () => {
 
   const session = await getServerSession(authOptions);
 
-  if (!session?.user.id) {
-    return notFound();
-  }
-  const userId = session.user.id;
+  const userId = session?.user.id;
   const bookingList = await getBookings(userId);
 
   const bookingsConfirmed = bookingList.filter(

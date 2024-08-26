@@ -6,7 +6,7 @@ import { Badge } from "./ui/badge";
 import { Card, CardContent } from "./ui/card";
 import { Button } from "./ui/button";
 import Link from "next/link";
-import { $Enums } from "@prisma/client";
+import { $Enums, BarbershopRating } from "@prisma/client";
 import {
   Sheet,
   SheetClose,
@@ -28,6 +28,12 @@ import {
   DialogTrigger,
 } from "./ui/dialog";
 import { StarIcon } from "lucide-react";
+import { toast } from "sonner";
+import { updateAvaliationBarbershop } from "../_actions/update-bookingAvaliation";
+import { deleteBooking } from "../_actions/delete-booking";
+import { Decimal } from "@prisma/client/runtime/library";
+import { Label } from "./ui/label";
+import { Textarea } from "./ui/textarea";
 
 enum BookingStatus {
   PENDING = "PENDING",
@@ -44,12 +50,20 @@ interface BookingProps {
     date: Date;
     service: {
       name: string;
-      price: string;
+      price: Decimal;
       barbershop: {
+        id: string;
         name: string;
         imageUrl: string;
         address: string;
         phones: string[];
+        ratings: {
+          id: string;
+          rating: number;
+          comment: string | null;
+          userId: string;
+          barbershopId: string;
+        }[];
       };
     };
     serviceId: string;
@@ -59,18 +73,40 @@ interface BookingProps {
 
 const BookingItem = ({ bookingList }: BookingProps) => {
   const [selectedStars, setSelectedStars] = useState<number | null>(null);
+  const [comment, setComment] = useState<string>("");
 
   const handleStarClick = (index: number) => {
     setSelectedStars(index + 1);
   };
 
-  const handleSubmit = async () => {
-    console.log("Estrelas selecionadas:", selectedStars);
+  const handleSubmitAvaliation = async (id: string) => {
+    if (!selectedStars) return;
 
-    const newTotalRatings = barbershop.totalRatings + 1;
-    const newAvaliation =
-      (barbershop.avaliation * barbershop.totalRatings + novaAvaliacao) /
-      newTotalRatings;
+    try {
+      await updateAvaliationBarbershop(id, selectedStars, comment);
+
+      // Exibir toast de sucesso
+      toast.success("Avaliação salva com sucesso!");
+    } catch (error) {
+      // Registrar o erro no console
+      console.error("Erro ao salvar a avaliação:", error);
+
+      // Exibir toast de erro
+      toast.error("Erro ao salvar a avaliação. Tente novamente.");
+    }
+  };
+
+  const handleCancelBooking = async (id: string) => {
+    try {
+      await deleteBooking(id);
+      toast.success("Reserva excluída com sucesso!");
+
+      // Recarregar a página após o cancelamento
+      window.location.reload();
+    } catch (error) {
+      console.error("Erro ao deletar a Reserva:", error);
+      toast.error("Erro ao deletar a Reserva. Tente novamente.");
+    }
   };
 
   return (
@@ -119,7 +155,7 @@ const BookingItem = ({ bookingList }: BookingProps) => {
                   </Card>
                 </div>
               </SheetTrigger>
-              <SheetContent className="flex flex-col h-full min-w-[90%]">
+              <SheetContent className="flex flex-col h-full min-w-[90%] overflow-auto">
                 <SheetHeader className="border-b border-solid p-5">
                   <SheetTitle className="text-left">
                     Informações da Reserva
@@ -199,8 +235,8 @@ const BookingItem = ({ bookingList }: BookingProps) => {
                 </div>
 
                 <div className="p-5 mt-5 flex flex-col gap-4 border-b border-solid">
-                  {booking.service.barbershop?.phones.map((phone) => (
-                    <PhoneItem key={phone} phone={phone} />
+                  {booking.service.barbershop?.phones.map((contact, index) => (
+                    <PhoneItem key={`${contact}-${index}`} phone={contact} />
                   ))}
                 </div>
 
@@ -226,50 +262,105 @@ const BookingItem = ({ bookingList }: BookingProps) => {
                             : "Cancelar Reserva"}
                         </Button>
                       </DialogTrigger>
-                      <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                          <DialogTitle>Avalie sua experiência</DialogTitle>
-                          <DialogDescription>
-                            Toque nas estrelas para avaliar sua experiência na{" "}
-                            {booking.service.barbershop.name}
-                          </DialogDescription>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                          <div className="flex items-center gap-2 justify-center">
-                            {[...Array(6)].map((_, index) => (
-                              <StarIcon
-                                key={index}
-                                className={`w-6 h-6 cursor-pointer ${
-                                  index < (selectedStars ?? 0)
-                                    ? "text-yellow-500"
-                                    : "text-gray-300"
-                                }`}
-                                onClick={() => handleStarClick(index)}
+                      {booking.confirmed === BookingStatus.COMPLETED ? (
+                        <DialogContent className="sm:max-w-[425px]">
+                          <DialogHeader className="flex fles-col gap-3">
+                            <DialogTitle>Avalie sua experiência</DialogTitle>
+                            <DialogDescription>
+                              Toque nas estrelas para avaliar sua experiência na{" "}
+                              {booking.service.barbershop.name}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="flex flex-col gap-4 py-4">
+                            <div className="flex items-center gap-2 justify-center">
+                              {[...Array(6)].map((_, index) => (
+                                <StarIcon
+                                  key={index}
+                                  className={`w-6 h-6 cursor-pointer ${
+                                    index < (selectedStars ?? 0)
+                                      ? "text-yellow-500"
+                                      : "text-gray-300"
+                                  }`}
+                                  onClick={() => handleStarClick(index)}
+                                />
+                              ))}
+                            </div>
+                            <div className="flex flex-col items-start gap-3 justify-start">
+                              <Label>Comentário</Label>
+                              <Textarea
+                                className="mt-3"
+                                title="comment"
+                                placeholder="Deixe um comentário sobre a loja."
+                                value={comment} // Bind o valor do estado ao Textarea
+                                onChange={(e) => setComment(e.target.value)} // Atualiza o estado com o valor do Textarea
                               />
-                            ))}
+                            </div>
                           </div>
-                        </div>
-                        <DialogFooter className="flex flex-row gap-4 w-full items-center justify-between">
-                          <SheetClose asChild>
-                            <Button
-                              variant="secondary"
-                              className="w-full"
-                              onClick={() => {
-                                setSelectedStars(null);
-                              }}
-                            >
-                              Cancelar
-                            </Button>
-                          </SheetClose>
-                          <Button
-                            className={`w-full ${!selectedStars ? "opacity-50 cursor-not-allowed" : ""}`}
-                            onClick={handleSubmit}
-                            disabled={!selectedStars}
-                          >
-                            Confirmar
-                          </Button>
-                        </DialogFooter>
-                      </DialogContent>
+                          <DialogFooter className="flex flex-row gap-4 w-full items-center justify-between">
+                            <SheetClose asChild>
+                              <Button
+                                variant="secondary"
+                                className="w-full"
+                                onClick={() => {
+                                  setSelectedStars(null);
+                                }}
+                              >
+                                Cancelar
+                              </Button>
+                            </SheetClose>
+                            <SheetClose asChild>
+                              <Button
+                                className={`w-full ${!selectedStars ? "opacity-50 cursor-not-allowed" : ""}`}
+                                onClick={() => {
+                                  handleSubmitAvaliation(
+                                    booking.service.barbershop.id,
+                                  );
+                                  setSelectedStars(null);
+                                }}
+                                disabled={!selectedStars}
+                              >
+                                Confirmar
+                              </Button>
+                            </SheetClose>
+                          </DialogFooter>
+                        </DialogContent>
+                      ) : (
+                        <DialogContent className="sm:max-w-[425px]">
+                          <DialogHeader className="flex fles-col gap-3">
+                            <DialogTitle>Cancelar Reserva</DialogTitle>
+                            <DialogDescription>
+                              Você confirma o cancelamento do Agendamento?
+                            </DialogDescription>
+                          </DialogHeader>
+
+                          <DialogFooter className="flex flex-row gap-4 w-full items-center justify-between">
+                            <div className="flex w-full gap-5">
+                              <SheetClose asChild className="w-full">
+                                <Button
+                                  variant="secondary"
+                                  className="w-full"
+                                  onClick={() => {
+                                    setSelectedStars(null);
+                                  }}
+                                >
+                                  Cancelar
+                                </Button>
+                              </SheetClose>
+                              <SheetClose className="w-full">
+                                <Button
+                                  variant="destructive"
+                                  className={`w-full`}
+                                  onClick={() =>
+                                    handleCancelBooking(booking.id)
+                                  }
+                                >
+                                  Confirmar
+                                </Button>
+                              </SheetClose>
+                            </div>
+                          </DialogFooter>
+                        </DialogContent>
+                      )}
                     </Dialog>
                   </div>
                 </div>
@@ -279,9 +370,13 @@ const BookingItem = ({ bookingList }: BookingProps) => {
         ))
       ) : (
         <div className="flex flex-col gap-3">
-          <h2 className="mt-6 text-sm">Você ainda não possui Agendamentos!</h2>
-          <Link href="/">
-            <Button className="bg-[#8162FF] text-white">Agendar Agora</Button>
+          <h2 className="mt-6 text-sm">
+            Você ainda não possui Agendamentos Confirmados!
+          </h2>
+          <Link href="/bookings">
+            <Button className="bg-[#8162FF] text-white">
+              Verificar Agendamentos
+            </Button>
           </Link>
         </div>
       )}

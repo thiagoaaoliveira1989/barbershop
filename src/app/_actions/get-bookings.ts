@@ -8,7 +8,27 @@ export const getBookings = async (id?: string) => {
     include: {
       service: {
         include: {
-          barbershop: true,
+          barbershop: {
+            select: {
+              id: true,
+              name: true,
+              imageUrl: true,
+              address: true,
+              phones: true,
+              totalRatings: true,
+              avaliation: true,
+              description: true,
+              ratings: {
+                select: {
+                  id: true,
+                  rating: true,
+                  comment: true,
+                  userId: true,
+                  barbershopId: true,
+                },
+              },
+            },
+          },
         },
       },
     },

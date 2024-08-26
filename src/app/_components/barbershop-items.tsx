@@ -4,20 +4,10 @@ import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { StarIcon } from "lucide-react";
 import Link from "next/link";
-
-export interface IBarber {
-  id: string;
-  name: string;
-  address: string;
-  phones: string[];
-  description: string;
-  imageUrl: string;
-  updatedAt: Date;
-  createdAt: Date;
-}
+import { Barbershop } from "@prisma/client";
 
 type BarbershopItemProps = {
-  barber: IBarber;
+  barber: Barbershop;
 };
 
 export const BarbershopItem = ({ barber }: BarbershopItemProps) => {
@@ -38,7 +28,7 @@ export const BarbershopItem = ({ barber }: BarbershopItemProps) => {
               variant="secondary"
             >
               <StarIcon size={12} className="fill-primary text-primary " />
-              <p className="text-xs font-semibold">5.0</p>
+              <p className="text-xs font-semibold">{barber.avaliation}</p>
             </Badge>
           </div>
           <div className="px-1 py-3">

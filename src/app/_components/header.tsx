@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Card, CardContent } from "./ui/card";
 
-import Logo from "../../assets/Logo.png";
+import Logo from "../../assets/Logo1.png";
 import SiderbarButton from "./siderbar-button";
 import Link from "next/link";
 
@@ -14,8 +14,8 @@ export const Header = () => {
             src={Logo}
             alt="Logo"
             layout="intrinsic"
-            height={18}
-            width={120}
+            height={20}
+            width={280}
           />
         </Link>
         <SiderbarButton />

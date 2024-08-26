@@ -2,8 +2,9 @@ import { getServerSession } from "next-auth";
 import { Header } from "../_components/header";
 import { authOptions } from "../_lib/auth";
 import { getBookings } from "../_actions/get-bookings";
-import { notFound } from "next/navigation";
 import BookingItem from "../_components/booking-item";
+import { signIn } from "next-auth/react";
+import ButtonLogin from "../_components/buttonLogin";
 
 enum BookingStatus {
   PENDING = "PENDING",
@@ -15,7 +16,7 @@ const Bookings = async () => {
   const session = await getServerSession(authOptions);
 
   if (!session?.user.id) {
-    return notFound();
+    return <ButtonLogin />;
   }
 
   const userId = session.user.id;
@@ -47,7 +48,6 @@ const Bookings = async () => {
             <BookingItem bookingList={bookingsPending} />
           </>
         )}
-        {bookingsPending.length === 0 && <p>Nenhum agendamento pendente.</p>}
 
         {bookingsConfirmed.length > 0 && (
           <>
@@ -57,9 +57,6 @@ const Bookings = async () => {
             <BookingItem bookingList={bookingsConfirmed} />
           </>
         )}
-        {bookingsConfirmed.length === 0 && (
-          <p>Nenhum agendamento confirmado.</p>
-        )}
 
         {bookingsCompleted.length > 0 && (
           <>
@@ -68,9 +65,6 @@ const Bookings = async () => {
             </h2>
             <BookingItem bookingList={bookingsCompleted} />
           </>
-        )}
-        {bookingsCompleted.length === 0 && (
-          <p>Nenhum agendamento completado.</p>
         )}
       </div>
     </>
