@@ -243,7 +243,7 @@ const SiderbarButton = ({}) => {
                       }
                     />
                   </Avatar>
-                  <div>
+                  <div className="flex flex-col gap-2">
                     <p className="font-bold text-lg">{data.user.name}</p>
                     <p className="text-sm text-gray-600">{data.user.email}</p>
                   </div>

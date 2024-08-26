@@ -2,13 +2,13 @@ import Image from "next/image";
 import { Header } from "./_components/header";
 import { Button } from "./_components/ui/button";
 import Banner from "../assets/Banner.png";
+import Banner2 from "../assets/banner2.jpg";
 import { BarbershopItem } from "./_components/barbershop-items";
 import { quickSearchOption } from "./_constants/search";
 import db from "../app/_lib/prisma";
 import UserLogin from "./_components/userLogin";
 import Search from "./_components/search";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { getBookings } from "./_actions/get-bookings";
 import { getServerSession } from "next-auth";
 import { BookingStatus } from "@prisma/client";
@@ -37,7 +37,7 @@ const Home = async () => {
       {/*header*/}
       <Header />
 
-      <div className="p-5 text-white">
+      <div className="block md:hidden p-5 text-white">
         <UserLogin />
 
         {/*BUSCA*/}
@@ -95,6 +95,39 @@ const Home = async () => {
             ) : (
               <></>
             )}
+          </div>
+        </div>
+      </div>
+
+      <div className="max-md:hidden md:flex !important md:justify-between md:items-center gap-3">
+        <div className="relative h-[150px] w-full">
+          <Image
+            src={Banner2}
+            alt="banner"
+            className="object-cover opacity-25 w-full h-[390px]"
+          />
+        </div>
+        <div className="absolute top-[100px] p-5 flex gap-[100px]">
+          <div className="w-[439px] h-[335px] flex flex-col gap-9">
+            {/*Login*/}
+            <UserLogin />
+
+            {/*BUSCA*/}
+            <Search />
+          </div>
+
+          {/*RECOMENDADOS*/}
+          <div className="max-w-[910px]">
+            <h3>Recomendados</h3>
+            <div className="flex overflow-y-auto gap-4 [&::-webkit-scrollbar]:hidden">
+              {barbershops ? (
+                barbershops.map((barber) => (
+                  <BarbershopItem key={barber.id} barber={barber} />
+                ))
+              ) : (
+                <></>
+              )}
+            </div>
           </div>
         </div>
       </div>
