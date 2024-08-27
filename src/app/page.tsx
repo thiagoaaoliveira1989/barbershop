@@ -23,6 +23,12 @@ const Home = async () => {
     },
   });
 
+  const visitadosBarbershops = await db.barbershop.findMany({
+    orderBy: {
+      avaliation: "asc",
+    },
+  });
+
   const session = await getServerSession(authOptions);
 
   const userId = session?.user.id;
@@ -99,35 +105,66 @@ const Home = async () => {
         </div>
       </div>
 
-      <div className="max-md:hidden md:flex !important md:justify-between md:items-center gap-3">
-        <div className="relative h-[150px] w-full">
-          <Image
-            src={Banner2}
-            alt="banner"
-            className="object-cover opacity-25 w-full h-[390px]"
-          />
-        </div>
-        <div className="absolute top-[100px] p-5 flex gap-[100px]">
-          <div className="w-[439px] h-[335px] flex flex-col gap-9">
-            {/*Login*/}
-            <UserLogin />
-
-            {/*BUSCA*/}
-            <Search />
+      <div className="max-md:hidden md:flex !important md:justify-between md:items-center md:flex-col gap-3">
+        <div className=" w-full">
+          <div className="relative">
+            <Image
+              src={Banner2}
+              alt="banner"
+              className="object-cover opacity-25 w-full h-[420px]"
+            />
           </div>
 
-          {/*RECOMENDADOS*/}
-          <div className="max-w-[910px]">
-            <h3>Recomendados</h3>
-            <div className="flex overflow-y-auto gap-4 [&::-webkit-scrollbar]:hidden">
-              {barbershops ? (
-                barbershops.map((barber) => (
-                  <BarbershopItem key={barber.id} barber={barber} />
-                ))
-              ) : (
-                <></>
-              )}
+          <div className="absolute top-[100px] grid grid-cols-2 p-10">
+            <div className="w-[439px] h-[335px] flex flex-col gap-9">
+              {/*Login*/}
+              <UserLogin />
+
+              {/*BUSCA*/}
+              <Search />
             </div>
+
+            {/*RECOMENDADOS*/}
+            <div className="w-[100%]">
+              <h3>Recomendados</h3>
+              <div className="flex overflow-y-auto gap-4 [&::-webkit-scrollbar]:hidden">
+                {barbershops ? (
+                  barbershops.map((barber) => (
+                    <BarbershopItem key={barber.id} barber={barber} />
+                  ))
+                ) : (
+                  <></>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/*POPULARES*/}
+        <div className="p-10 w-full">
+          <h3>Populares</h3>
+          <div className="flex overflow-y-auto gap-4 [&::-webkit-scrollbar]:hidden">
+            {popularBarbershops ? (
+              popularBarbershops.map((barber) => (
+                <BarbershopItem key={barber.id} barber={barber} />
+              ))
+            ) : (
+              <></>
+            )}
+          </div>
+        </div>
+
+        {/*MAIS VISITADOS*/}
+        <div className="p-10 w-full">
+          <h3>Mais Visitados</h3>
+          <div className="flex overflow-y-auto gap-4 [&::-webkit-scrollbar]:hidden">
+            {visitadosBarbershops ? (
+              visitadosBarbershops.map((barber) => (
+                <BarbershopItem key={barber.id} barber={barber} />
+              ))
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>

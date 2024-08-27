@@ -30,7 +30,7 @@ const Search = () => {
   };
 
   return (
-    <>
+    <div className="w-100">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
@@ -60,7 +60,7 @@ const Search = () => {
           </Button>
         </form>
       </Form>
-    </>
+    </div>
   );
 };
 

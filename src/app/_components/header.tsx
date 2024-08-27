@@ -8,7 +8,7 @@ import Link from "next/link";
 export const Header = () => {
   return (
     <Card className="bg-gray-950 border-none  ">
-      <CardContent className="flex flex-row items-center justify-between p-5">
+      <CardContent className="flex flex-row items-center justify-between p-5 md:px-10">
         <Link href="/">
           <Image
             src={Logo}

@@ -34,6 +34,8 @@ import { deleteBooking } from "../_actions/delete-booking";
 import { Decimal } from "@prisma/client/runtime/library";
 import { Label } from "./ui/label";
 import { Textarea } from "./ui/textarea";
+import Image from "next/image";
+import Map from "../../assets/map.svg";
 
 enum BookingStatus {
   PENDING = "PENDING",
@@ -163,12 +165,7 @@ const BookingItem = ({ bookingList }: BookingProps) => {
                 </SheetHeader>
 
                 <div className="relative flex flex-col w-full mt-6">
-                  <iframe
-                    allowFullScreen
-                    height={290}
-                    src="https://www.google.com/maps/embed/v1/place?key=YOUR_API_KEY&q=Pastelaria+do+Joao"
-                    loading="lazy"
-                  ></iframe>
+                  <Image height={290} src={Map} alt="map" />
 
                   <div className="absolute top-[120px] h-[15%] w-full p-3">
                     <Card className="w-full p-2 flex items-center">
