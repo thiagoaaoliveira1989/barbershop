@@ -1,8 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 
 declare global {
-  // eslint-disable-next-line no-var
-  var prisma: PrismaClient | undefined;
+  var db: PrismaClient | undefined;
 }
 
 let db: PrismaClient;
@@ -10,10 +9,10 @@ let db: PrismaClient;
 if (process.env.NODE_ENV === "production") {
   db = new PrismaClient();
 } else {
-  if (!global.prisma) {
-    global.prisma = new PrismaClient();
+  if (!global.db) {
+    global.db = new PrismaClient();
   }
-  db = global.prisma;
+  db = global.db;
 }
 
 export default db;
