@@ -1,5 +1,6 @@
 import { BarbershopItem } from "../_components/barbershop-items";
 import { Header } from "../_components/header";
+import HeaderDesktop from "../_components/header-desktop";
 import Search from "../_components/search";
 import db from "../_lib/prisma";
 
@@ -40,29 +41,37 @@ const BarbershopPage = async ({ searchParams }: Props) => {
   });
 
   return (
-    <div className="">
-      <Header />
-
-      <div className="my-6 px-5">
-        <Search />
-      </div>
-
-      <div className="px-5">
-        <h2 className="mt-4">
-          Resultados para: &quot;{searchParams?.title || searchParams?.service}
-          &quot;
-        </h2>
-        <div className="grid grid-cols-2 gap-4">
-          {barbershops.length > 0 ? (
-            barbershops.map((barber) => (
-              <BarbershopItem key={barber.id} barber={barber} />
-            ))
-          ) : (
-            <p className="mt-6">Nenhum resultado encontrado.</p>
-          )}
+    <>
+      <div className="block md:hidden">
+        <Header />
+        <div className="p-5 mt-6">
+          <Search />
         </div>
       </div>
-    </div>
+
+      <div className="max-md:hidden md:flex !important md:justify-between md:items-center md:flex-col gap-3">
+        <HeaderDesktop />
+      </div>
+
+      <div className="p-5 md:px-10">
+        <div className="mt-6">
+          <h2 className="">
+            Resultados para: &quot;
+            {searchParams?.title || searchParams?.service}
+            &quot;
+          </h2>
+          <div className="mt-4 grid grid-cols-2 md:grid-cols-6 gap-4">
+            {barbershops.length > 0 ? (
+              barbershops.map((barber) => (
+                <BarbershopItem key={barber.id} barber={barber} />
+              ))
+            ) : (
+              <p className="mt-6">Nenhum resultado encontrado.</p>
+            )}
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 

@@ -154,12 +154,12 @@ const ServiceItem = ({ service, barbershop }: props) => {
                   Reservar
                 </Button>
               </SheetTrigger>
-              <SheetContent className="px-0">
-                <SheetHeader>
+              <SheetContent className="px-0 w-full h-full overflow-y-auto">
+                <SheetHeader className="w-full flex items-center justify-center">
                   <SheetTitle>Fazer Reserva</SheetTitle>
                 </SheetHeader>
 
-                <div className="border-b border-solid py-5">
+                <div className="border-b border-solid py-5 w-full">
                   <Calendar
                     mode="single"
                     locale={ptBR}
@@ -244,9 +244,11 @@ const ServiceItem = ({ service, barbershop }: props) => {
                 )}
 
                 {selectedTime && selectedDay && (
-                  <SheetFooter className="px-6 mb-5">
+                  <SheetFooter className="px-6 mb-5 ">
                     <SheetClose asChild>
-                      <Button onClick={handleCreatebooking}>Confirmar</Button>
+                      <Button className="w-full" onClick={handleCreatebooking}>
+                        Confirmar
+                      </Button>
                     </SheetClose>
                   </SheetFooter>
                 )}

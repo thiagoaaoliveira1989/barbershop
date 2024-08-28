@@ -121,7 +121,7 @@ const BookingItem = ({ bookingList }: BookingProps) => {
                 <div className="mt-6 cursor-pointer">
                   <Card className="mt-3 rounded-xl bg-[#26272B]">
                     <CardContent className="flex justify-between p-0">
-                      <div className="flex flex-col gap-2 py-5 pl-5">
+                      <div className="flex flex-col gap-2 p-5 items-start justify-start">
                         <Badge className="flex items-center justify-center px-2 py-1 max-w-[100px] bg-[#221C3D] font-medium text-[#8162FF] hover:bg-[#372d63]">
                           {booking.confirmed === BookingStatus.PENDING
                             ? "Pendente"
@@ -129,10 +129,10 @@ const BookingItem = ({ bookingList }: BookingProps) => {
                               ? "Confirmado"
                               : "Finalizado"}
                         </Badge>
-                        <h3 className="font-semibold">
+                        <h3 className="font-semibold text-start">
                           {booking.service.name}
                         </h3>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-start justify-start gap-2">
                           <Avatar className="h-[24px] w-[24px]">
                             <AvatarImage
                               src={
@@ -157,7 +157,7 @@ const BookingItem = ({ bookingList }: BookingProps) => {
                   </Card>
                 </div>
               </SheetTrigger>
-              <SheetContent className="flex flex-col h-full min-w-[90%] overflow-auto">
+              <SheetContent className="flex flex-col h-full overflow-auto">
                 <SheetHeader className="border-b border-solid p-5">
                   <SheetTitle className="text-left">
                     Informações da Reserva
@@ -167,9 +167,9 @@ const BookingItem = ({ bookingList }: BookingProps) => {
                 <div className="relative flex flex-col w-full mt-6">
                   <Image height={290} src={Map} alt="map" />
 
-                  <div className="absolute top-[120px] h-[15%] w-full p-3">
+                  <div className="absolute top-[40px] h-[15%] w-full p-3">
                     <Card className="w-full p-2 flex items-center">
-                      <CardContent className="flex items-center">
+                      <CardContent className="flex items-center justify-center p-5">
                         <Avatar>
                           <AvatarImage
                             src={booking.service.barbershop.imageUrl}
@@ -177,7 +177,9 @@ const BookingItem = ({ bookingList }: BookingProps) => {
                         </Avatar>
                         <div className="ml-5 flex flex-col gap-1">
                           <h2>{booking.service.barbershop.name}</h2>
-                          <p>{booking.service.barbershop.address}</p>
+                          <p className="text-[12px] font-bold text-gray-400">
+                            {booking.service.barbershop.address}
+                          </p>
                         </div>
                       </CardContent>
                     </Card>
