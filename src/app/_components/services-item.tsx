@@ -15,7 +15,7 @@ import {
 } from "./ui/sheet";
 import { Calendar } from "./ui/calendar";
 import { ptBR } from "date-fns/locale";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { format, set } from "date-fns";
 import { createBooking } from "../_actions/create-booking";
 import { useSession } from "next-auth/react";
@@ -69,60 +69,62 @@ const ServiceItem = ({ service, barbershop }: props) => {
     }
   };
 
-  const generateTimeList = (
-    startTime: number,
-    endTime: number,
-    intervalMinutes: number,
-  ): string[] => {
-    const times = [];
-    let currentTime = startTime;
+  const generateTimeList = useCallback(
+    (startTime: number, endTime: number, intervalMinutes: number): string[] => {
+      const times = [];
+      let currentTime = startTime;
 
-    while (currentTime <= endTime) {
-      const hours = String(Math.floor(currentTime / 60)).padStart(2, "0");
-      const minutes = String(currentTime % 60).padStart(2, "0");
-      times.push(`${hours}:${minutes}`);
-      currentTime += intervalMinutes;
-    }
+      while (currentTime <= endTime) {
+        const hours = String(Math.floor(currentTime / 60)).padStart(2, "0");
+        const minutes = String(currentTime % 60).padStart(2, "0");
+        times.push(`${hours}:${minutes}`);
+        currentTime += intervalMinutes;
+      }
 
-    return times;
-  };
+      return times;
+    },
+    [],
+  );
 
-  const fetchAvailableTimes = async (selectedDay: Date) => {
-    const listBookings = await getBookings();
+  const fetchAvailableTimes = useCallback(
+    async (selectedDay: Date) => {
+      const listBookings = await getBookings();
 
-    const reservedTimesByDay = listBookings.map((booking) => {
-      const localDate = new Date(booking.date);
-      localDate.setHours(localDate.getUTCHours() - 3);
+      const reservedTimesByDay = listBookings.map((booking) => {
+        const localDate = new Date(booking.date);
+        localDate.setHours(localDate.getUTCHours() - 3);
 
-      const date = localDate.toISOString().split("T")[0];
-      const time = localDate.toTimeString().split(" ")[0].substring(0, 5);
+        const date = localDate.toISOString().split("T")[0];
+        const time = localDate.toTimeString().split(" ")[0].substring(0, 5);
 
-      return { date, time };
-    });
+        return { date, time };
+      });
 
-    const selectedDayString = selectedDay.toISOString().split("T")[0];
+      const selectedDayString = selectedDay.toISOString().split("T")[0];
 
-    const reservedTimes = reservedTimesByDay
-      .filter((booking) => booking.date === selectedDayString)
-      .map((booking) => booking.time);
+      const reservedTimes = reservedTimesByDay
+        .filter((booking) => booking.date === selectedDayString)
+        .map((booking) => booking.time);
 
-    const startTime = 8 * 60; // 08:00 in minutes
-    const endTime = 17 * 60; // 17:00 in minutes
-    const intervalMinutes = 45;
+      const startTime = 8 * 60; // 08:00 em minutos
+      const endTime = 17 * 60; // 17:00 em minutos
+      const intervalMinutes = 45;
 
-    const timeList = generateTimeList(startTime, endTime, intervalMinutes);
-    const availableTimes = timeList.filter(
-      (time) => !reservedTimes.includes(time),
-    );
+      const timeList = generateTimeList(startTime, endTime, intervalMinutes);
+      const availableTimes = timeList.filter(
+        (time) => !reservedTimes.includes(time),
+      );
 
-    setAvailableTimes(availableTimes);
-  };
+      setAvailableTimes(availableTimes);
+    },
+    [generateTimeList],
+  );
 
   useEffect(() => {
     if (selectedDay) {
       fetchAvailableTimes(selectedDay);
     }
-  }, [selectedDay]);
+  }, [selectedDay, fetchAvailableTimes]);
 
   return (
     <Card>
