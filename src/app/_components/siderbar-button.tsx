@@ -329,15 +329,40 @@ const SiderbarButton = ({}) => {
             </SheetContent>
           </Sheet>
         ) : (
-          <Link href="/login">
-            <Button
-              className="justify-start gap-2 hover:bg-primary"
-              variant="ghost"
-            >
-              <UserIcon size={18} />
-              Login
-            </Button>
-          </Link>
+          <>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  className="justify-start gap-2 hover:bg-primary"
+                  variant="ghost"
+                >
+                  <UserIcon size={18} />
+                  Login
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="w-[90%]">
+                <DialogHeader>
+                  <DialogTitle>Faça Login na plataforma</DialogTitle>
+                  <DialogDescription>
+                    Conecte-se usando sua conta do Google
+                  </DialogDescription>
+                </DialogHeader>
+                <Button
+                  onClick={handleLoginWithGoogleClick}
+                  className="flex gap-1 font-bold hover:bg-primary"
+                  variant="outline"
+                >
+                  <Image
+                    src={Google}
+                    alt="fazer login com o Google"
+                    width={18}
+                    height={18}
+                  />
+                  Google
+                </Button>
+              </DialogContent>
+            </Dialog>
+          </>
         )}
       </div>
     </>
