@@ -40,7 +40,7 @@ export const BarbershopItem = ({ barber }: BarbershopItemProps) => {
             </p>
             <Button
               variant="secondary"
-              className="rounded-xl mt-3 w-full bg-[#353638]"
+              className="rounded-xl mt-3 w-full hover:bg-primary"
             >
               <Link href={`barbershop/${barber.id}`}>Reservar</Link>
             </Button>

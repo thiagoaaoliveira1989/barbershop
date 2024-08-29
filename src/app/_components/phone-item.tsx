@@ -23,6 +23,7 @@ const PhoneItem = ({ phone }: props) => {
       <Button
         variant="outline"
         size="sm"
+        className="hover:bg-primary"
         onClick={() => handleCopyPhoneClick(phone)}
       >
         Copiar

@@ -60,7 +60,7 @@ const BarbershopPage = async ({ searchParams }: Props) => {
             {searchParams?.title || searchParams?.service}
             &quot;
           </h2>
-          <div className="mt-4 grid grid-cols-2 md:grid-cols-6 gap-4">
+          <div className="mt-4 flex flex-row overflow-y-auto max-w-screen [&::-webkit-scrollbar]:hidden md:grid-cols-6 gap-4">
             {barbershops.length > 0 ? (
               barbershops.map((barber) => (
                 <BarbershopItem key={barber.id} barber={barber} />
