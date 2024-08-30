@@ -59,7 +59,7 @@ const SiderbarButton = ({}) => {
               <MenuIcon />
             </Button>
           </SheetTrigger>
-          <SheetContent className="overflow-y-auto">
+          <SheetContent className="w-full  overflow-y-auto">
             <SheetHeader>
               <SheetTitle className="text-left">Menu</SheetTitle>
             </SheetHeader>
@@ -257,34 +257,16 @@ const SiderbarButton = ({}) => {
                       className="flex items-center gap-2 hover:bg-primary"
                     >
                       <SettingsIcon size={18} />
-                      Configurações
+                      Editar Perfil
                     </Button>
                   </Link>
-                  <Link href="/profile/orders">
+                  <Link href="/bookings">
                     <Button
                       variant="ghost"
                       className="flex items-center gap-2 hover:bg-primary"
                     >
                       <ShoppingBag size={18} />
-                      Meus Pedidos
-                    </Button>
-                  </Link>
-                  <Link href="/profile/wishlist">
-                    <Button
-                      variant="ghost"
-                      className="flex items-center gap-2 hover:bg-primary"
-                    >
-                      <Heart size={18} />
-                      Lista de Desejos
-                    </Button>
-                  </Link>
-                  <Link href="/profile/help">
-                    <Button
-                      variant="ghost"
-                      className="flex items-center gap-2 hover:bg-primary"
-                    >
-                      <HelpCircleIcon size={18} />
-                      Ajuda
+                      Meus Agendamentos
                     </Button>
                   </Link>
                 </div>

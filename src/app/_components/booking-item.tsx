@@ -157,7 +157,7 @@ const BookingItem = ({ bookingList }: BookingProps) => {
                   </Card>
                 </div>
               </SheetTrigger>
-              <SheetContent className="flex flex-col h-full overflow-auto">
+              <SheetContent className="flex flex-col h-full w-full overflow-auto">
                 <SheetHeader className="border-b border-solid p-5">
                   <SheetTitle className="text-left">
                     Informações da Reserva

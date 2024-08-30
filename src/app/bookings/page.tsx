@@ -11,6 +11,7 @@ import Image from "next/image";
 import Search from "../_components/search";
 import SiderbarButton from "../_components/siderbar-button";
 import Logo from "../../assets/Logo1.png";
+import UserLogin from "../_components/userLogin";
 
 enum BookingStatus {
   PENDING = "PENDING",
@@ -22,7 +23,14 @@ const Bookings = async () => {
   const session = await getServerSession(authOptions);
 
   if (!session?.user.id) {
-    return <ButtonLogin />;
+    return (
+      <>
+        <Header />
+        <div className="pt-6">
+          <UserLogin />
+        </div>
+      </>
+    );
   }
 
   const userId = session.user.id;
@@ -42,36 +50,38 @@ const Bookings = async () => {
 
   return (
     <>
-      <div className="block md:hidden p-5 text-white">
+      <div className="block md:hidden text-white">
         <Header />
-        <h1 className="text-xl font-bold">Agendamentos</h1>
+        <div className="p-5">
+          <h1 className="text-xl font-bold">Agendamentos</h1>
 
-        {bookingsPending.length > 0 && (
-          <>
-            <h2 className="text-lg mt-5 text-gray-400">
-              Agendamentos Pendentes
-            </h2>
-            <BookingItem bookingList={bookingsPending} />
-          </>
-        )}
+          {bookingsPending.length > 0 && (
+            <>
+              <h2 className="text-lg mt-5 text-gray-400">
+                Agendamentos Pendentes
+              </h2>
+              <BookingItem bookingList={bookingsPending} />
+            </>
+          )}
 
-        {bookingsConfirmed.length > 0 && (
-          <>
-            <h2 className="text-lg mt-5 text-gray-400">
-              Agendamentos Confirmados
-            </h2>
-            <BookingItem bookingList={bookingsConfirmed} />
-          </>
-        )}
+          {bookingsConfirmed.length > 0 && (
+            <>
+              <h2 className="text-lg mt-5 text-gray-400">
+                Agendamentos Confirmados
+              </h2>
+              <BookingItem bookingList={bookingsConfirmed} />
+            </>
+          )}
 
-        {bookingsCompleted.length > 0 && (
-          <>
-            <h2 className="text-lg mt-5 text-gray-400">
-              Agendamentos Completados
-            </h2>
-            <BookingItem bookingList={bookingsCompleted} />
-          </>
-        )}
+          {bookingsCompleted.length > 0 && (
+            <>
+              <h2 className="text-lg mt-5 text-gray-400">
+                Agendamentos Completados
+              </h2>
+              <BookingItem bookingList={bookingsCompleted} />
+            </>
+          )}
+        </div>
       </div>
 
       <div className="max-md:hidden md:flex !important md:justify-between md:items-center md:flex-col gap-3">
@@ -98,7 +108,7 @@ const Bookings = async () => {
           </Card>
         </div>
 
-        <div className="mt-[40px]">
+        <div className=" p-5">
           <h1 className="text-xl font-bold">Agendamentos</h1>
 
           {bookingsPending.length > 0 && (
